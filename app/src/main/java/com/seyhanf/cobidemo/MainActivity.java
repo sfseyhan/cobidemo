@@ -13,6 +13,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -60,8 +61,20 @@ public class MainActivity extends AppCompatActivity implements AnimationUtil.OnA
         AnimationUtil.setPivotOfPentagon(viewPentagon);
 
         for (int i = 0; i < layoutPentagonRight.getChildCount(); i++) {
-            AnimationUtil.setPivotRelatively(layoutPentagonRight.getChildAt(i), viewPentagon);
+            View childView = layoutPentagonRight.getChildAt(i);
+            TextView textView = (TextView) childView.findViewById(R.id.layout_pentagon_content_text);
+            if (textView != null) {
+                textView.setText(""+ i);
+            }
+            AnimationUtil.setPivotRelatively(childView, viewPentagon);
         }
+
+        AnimationUtil.setRotationIncrementally(
+                layoutFirst,
+                layoutSecond,
+                layoutThird,
+                layoutFourth,
+                layoutFifth);
 
     }
 
@@ -132,6 +145,9 @@ public class MainActivity extends AppCompatActivity implements AnimationUtil.OnA
 
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) frameLayout.getLayoutParams();
         params.height = getDeviceHeight() + getOffScreenVertical() * 2;
+        if (!expandToRight) {
+            params.height = (int)(params.height * 1.5f);
+        }
         //TODO Assuming device height would be smaller than width since it's landscape. Might have to check if width is smaller.
         params.width = params.height;
         frameLayout.setLayoutParams(params);
@@ -139,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements AnimationUtil.OnA
         if (expandToRight) {
             params.rightMargin = -((params.width/2) + getOffScreenHorizontal());
         } else {
-            params.leftMargin = -((params.width/2) + getOffScreenHorizontal());
+            params.leftMargin = -((params.width/2));
         }
 
     }

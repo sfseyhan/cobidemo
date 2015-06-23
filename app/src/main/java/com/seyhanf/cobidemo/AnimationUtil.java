@@ -52,7 +52,7 @@ public final class AnimationUtil {
      */
     public static void animateAlpha(final View view, final boolean show) {
 
-        animateAlpha(view, show, ALPHA_ANIMATION_DURATION_MEDIUM, 0);
+        animateAlpha(view, show, show ? ALPHA_ANIMATION_DURATION_LONG : ALPHA_ANIMATION_DURATION_SHORT, 0);
 
     }
 
@@ -96,7 +96,7 @@ public final class AnimationUtil {
     }
 
     public static float getPentagonPivotY(final View pentagonView) {
-        return ((float)pentagonView.getHeight())/1.82f;
+        return ((float)pentagonView.getHeight())/1.80f;
     }
 
     public static void setPivotRelatively(View view, final View pentagonView) {

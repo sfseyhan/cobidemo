@@ -7,28 +7,9 @@
         android:id="@+id/layout_left_pentagon_pentagon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="100dp"
+        android:rotation="36"
         android:layout_gravity="right|center_vertical"
         android:background="@drawable/ic_pentagon"/>
-
-    <include
-        android:id="@+id/layout_left_pentagon_content_first"
-        layout="@layout/layout_pentagon_content" />
-
-    <include
-        android:id="@+id/layout_left_pentagon_content_second"
-        layout="@layout/layout_pentagon_content" />
-
-    <include
-        android:id="@+id/layout_left_pentagon_content_third"
-        layout="@layout/layout_pentagon_content" />
-
-    <include
-        android:id="@+id/layout_left_pentagon_content_fourth"
-        layout="@layout/layout_pentagon_content" />
-
-    <include
-        android:id="@+id/layout_left_pentagon_content_fifth"
-        layout="@layout/layout_pentagon_content" />
 
 </FrameLayout>

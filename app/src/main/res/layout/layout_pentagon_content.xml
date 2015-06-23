@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/activity_main_rotating_content_first"
-    android:layout_width="wrap_content"
+    android:layout_width="150dp"
     android:layout_height="wrap_content"
-    android:layout_gravity="right|center_vertical"
-    android:gravity="right"
-    android:layout_marginRight="30dp"
+    android:layout_gravity="left|center_vertical"
+    android:gravity="center_vertical|right"
     android:layout_centerVertical="true"
     android:orientation="vertical" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="AAAAAA\nAAAAAA\nAAAAAA\n"/>
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/bicycle"/>
 
 
     <TextView
+        android:id="@+id/layout_pentagon_content_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="AAA\nAAA\nAAA\n"/>
