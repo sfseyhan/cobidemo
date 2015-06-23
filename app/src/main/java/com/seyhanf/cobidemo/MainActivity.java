@@ -13,16 +13,16 @@ import butterknife.OnClick;
 /**
  * Created by seyhanf on 23/06/15.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AnimationUtil.OnRotationCompletedListener {
 
-    @InjectView(R.id.activity_main_rotating_pentagon)
-    View viewPentagon;
-
+    @InjectView(R.id.activity_main_rotating_pentagon) View viewPentagon;
     @InjectView(R.id.activity_main_rotating_content_first) LinearLayout layoutFirst;
     @InjectView(R.id.activity_main_rotating_content_second) LinearLayout layoutSecond;
     @InjectView(R.id.activity_main_rotating_content_third) LinearLayout layoutThird;
     @InjectView(R.id.activity_main_rotating_content_fourth) LinearLayout layoutFourth;
     @InjectView(R.id.activity_main_rotating_content_fifth) LinearLayout layoutFifth;
+
+    private boolean isRotating;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,12 +35,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onGlobalLayout() {
                 viewPentagon.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                setPivots();
+                prepareLayout();
             }
         });
     }
 
-    private void setPivots() {
+    private void prepareLayout() {
 
         AnimationUtil.setPivotOfPentagon(viewPentagon);
         AnimationUtil.setPivotRelatively(layoutFirst, viewPentagon);
@@ -60,7 +60,14 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.activity_main_rotating_pentagon)
     public void rotatePentagon() {
 
+        if (isRotating) {
+            return;
+        }
+
+        isRotating = true;
+
         AnimationUtil.rotate(
+                this,
                 viewPentagon,
                 layoutFirst,
                 layoutSecond,
@@ -70,5 +77,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+    @Override
+    public void onRotationCompeted() {
+        isRotating = false;
+    }
 }

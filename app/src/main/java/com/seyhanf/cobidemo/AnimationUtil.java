@@ -2,6 +2,7 @@ package com.seyhanf.cobidemo;
 
 import android.animation.ValueAnimator;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 
 /**
  * Created by seyhanf on 23/06/15.
@@ -16,6 +17,10 @@ public final class AnimationUtil {
     private static final int ALPHA_ANIMATION_DURATION_LONG = 2000;
     private static final int ALPHA_ANIMATION_START_OFFSET_SHORT = 200;
     private static final int ALPHA_ANIMATION_START_OFFSET_LONG = 1000;
+
+    public interface OnRotationCompletedListener {
+        public void onRotationCompeted();
+    }
 
     /**
      * private constructor.
@@ -63,18 +68,19 @@ public final class AnimationUtil {
             final int duration,
             final int offset) {
 
-        ValueAnimator animation = ValueAnimator.ofFloat(
+        ValueAnimator animator = ValueAnimator.ofFloat(
                 show ? ALPHA_TRANSPARENT : ALPHA_OPAQUE,
                 show ? ALPHA_OPAQUE : ALPHA_TRANSPARENT);
-        animation.setDuration(duration);
-        animation.setStartDelay(offset);
-        animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        animator.setDuration(duration);
+        animator.setStartDelay(offset);
+        animator.setInterpolator(new DecelerateInterpolator());
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 view.setAlpha((Float) animation.getAnimatedValue());
             }
         });
-        animation.start();
+        animator.start();
 
     }
 
@@ -104,6 +110,9 @@ public final class AnimationUtil {
 
         for (int i = 0; i < views.length; i++) {
             views[i].setRotation(DEFAULT_ROTATION_ANGLE * i);
+            if (i != 0) {
+                views[i].setAlpha(ALPHA_TRANSPARENT);
+            }
         }
 
     }
@@ -113,9 +122,9 @@ public final class AnimationUtil {
      *
      * @param views     views to rotate
      */
-    public static void rotate(final View... views) {
+    public static void rotate(final OnRotationCompletedListener onRotationCompletedListener, final View... views) {
 
-        rotate(DEFAULT_ROTATION_ANGLE, ALPHA_ANIMATION_DURATION_SHORT, 0, views);
+        rotate(DEFAULT_ROTATION_ANGLE, ALPHA_ANIMATION_DURATION_SHORT, 0, onRotationCompletedListener, views);
 
     }
 
@@ -130,6 +139,7 @@ public final class AnimationUtil {
             final float angle,
             final int duration,
             final int offset,
+            final OnRotationCompletedListener onRotationCompletedListener,
             final View... views) {
 
         final float[] initialRotations = new float[views.length];
@@ -146,6 +156,7 @@ public final class AnimationUtil {
         ValueAnimator animator = ValueAnimator.ofFloat(0, angle);
         animator.setDuration(duration);
         animator.setStartDelay(offset);
+        animator.setInterpolator(new DecelerateInterpolator());
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -153,6 +164,10 @@ public final class AnimationUtil {
                 float rotationAmount = (float) animation.getAnimatedValue();
                 for (int i = 0; i < views.length; i++) {
                     views[i].setRotation(initialRotations[i] + rotationAmount % TOTAL_ANGLE);
+                }
+
+                if (rotationAmount == angle && onRotationCompletedListener != null) {
+                    onRotationCompletedListener.onRotationCompeted();
                 }
 
             }

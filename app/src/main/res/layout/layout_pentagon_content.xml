@@ -4,7 +4,7 @@
     android:id="@+id/activity_main_rotating_content_first"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_alignParentRight="true"
+    android:layout_gravity="right|center_vertical"
     android:gravity="right"
     android:layout_marginRight="30dp"
     android:layout_centerVertical="true"
