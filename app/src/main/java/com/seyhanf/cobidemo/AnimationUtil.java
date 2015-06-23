@@ -132,6 +132,20 @@ public final class AnimationUtil {
      * Rotates view.
      *
      * @param views     views to rotate
+     */
+    public static void rotate(
+            final float angle,
+            final OnRotationCompletedListener onRotationCompletedListener,
+            final View... views) {
+
+        rotate(angle, ALPHA_ANIMATION_DURATION_SHORT, 0, onRotationCompletedListener, views);
+
+    }
+
+    /**
+     * Rotates view.
+     *
+     * @param views     views to rotate
      * @param duration duration of animation
      * @param offset   offset of animation
      */

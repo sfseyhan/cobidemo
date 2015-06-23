@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="rotating_layout_angle_between_children">72</integer>
+</resources>
