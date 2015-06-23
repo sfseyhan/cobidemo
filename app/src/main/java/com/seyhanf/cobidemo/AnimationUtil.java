@@ -14,12 +14,14 @@ public final class AnimationUtil {
     private static final float DEFAULT_ROTATION_ANGLE = -72.0f;
     private static final float TOTAL_ANGLE = 360.0f;
     private static final int ALPHA_ANIMATION_DURATION_SHORT = 500;
-    private static final int ALPHA_ANIMATION_DURATION_LONG = 2000;
+    private static final int ALPHA_ANIMATION_DURATION_MEDIUM = 800;
+    private static final int ALPHA_ANIMATION_DURATION_LONG = 1200;
     private static final int ALPHA_ANIMATION_START_OFFSET_SHORT = 200;
     private static final int ALPHA_ANIMATION_START_OFFSET_LONG = 1000;
 
-    public interface OnRotationCompletedListener {
+    public interface OnAnimationCompletedListener {
         public void onRotationCompeted();
+        public void onTranslationCompeted();
     }
 
     /**
@@ -50,7 +52,7 @@ public final class AnimationUtil {
      */
     public static void animateAlpha(final View view, final boolean show) {
 
-        animateAlpha(view, show, ALPHA_ANIMATION_DURATION_SHORT, 0);
+        animateAlpha(view, show, ALPHA_ANIMATION_DURATION_MEDIUM, 0);
 
     }
 
@@ -73,13 +75,13 @@ public final class AnimationUtil {
                 show ? ALPHA_OPAQUE : ALPHA_TRANSPARENT);
         animator.setDuration(duration);
         animator.setStartDelay(offset);
-        animator.setInterpolator(new DecelerateInterpolator());
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 view.setAlpha((Float) animation.getAnimatedValue());
             }
         });
+        animator.setInterpolator(new DecelerateInterpolator());
         animator.start();
 
     }
@@ -98,6 +100,10 @@ public final class AnimationUtil {
     }
 
     public static void setPivotRelatively(View view, final View pentagonView) {
+
+        if (view == pentagonView) {
+            return;
+        }
 
         float pivotX = getPentagonPivotX(pentagonView) + pentagonView.getX() - view.getX();
         float pivotY = getPentagonPivotY(pentagonView) + pentagonView.getY() - view.getY();
@@ -122,9 +128,9 @@ public final class AnimationUtil {
      *
      * @param views     views to rotate
      */
-    public static void rotate(final OnRotationCompletedListener onRotationCompletedListener, final View... views) {
+    public static void rotate(final OnAnimationCompletedListener onAnimationCompletedListener, final View... views) {
 
-        rotate(DEFAULT_ROTATION_ANGLE, ALPHA_ANIMATION_DURATION_SHORT, 0, onRotationCompletedListener, views);
+        rotate(DEFAULT_ROTATION_ANGLE, ALPHA_ANIMATION_DURATION_SHORT, 0, onAnimationCompletedListener, views);
 
     }
 
@@ -135,10 +141,10 @@ public final class AnimationUtil {
      */
     public static void rotate(
             final float angle,
-            final OnRotationCompletedListener onRotationCompletedListener,
+            final OnAnimationCompletedListener onAnimationCompletedListener,
             final View... views) {
 
-        rotate(angle, ALPHA_ANIMATION_DURATION_SHORT, 0, onRotationCompletedListener, views);
+        rotate(angle, ALPHA_ANIMATION_DURATION_SHORT, 0, onAnimationCompletedListener, views);
 
     }
 
@@ -153,7 +159,7 @@ public final class AnimationUtil {
             final float angle,
             final int duration,
             final int offset,
-            final OnRotationCompletedListener onRotationCompletedListener,
+            final OnAnimationCompletedListener onAnimationCompletedListener,
             final View... views) {
 
         final float[] initialRotations = new float[views.length];
@@ -170,7 +176,6 @@ public final class AnimationUtil {
         ValueAnimator animator = ValueAnimator.ofFloat(0, angle);
         animator.setDuration(duration);
         animator.setStartDelay(offset);
-        animator.setInterpolator(new DecelerateInterpolator());
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -180,31 +185,15 @@ public final class AnimationUtil {
                     views[i].setRotation(initialRotations[i] + rotationAmount % TOTAL_ANGLE);
                 }
 
-                if (rotationAmount == angle && onRotationCompletedListener != null) {
-                    onRotationCompletedListener.onRotationCompeted();
+                if (rotationAmount == angle && onAnimationCompletedListener != null) {
+                    onAnimationCompletedListener.onRotationCompeted();
                 }
 
             }
         });
+        animator.setInterpolator(new DecelerateInterpolator());
         animator.start();
 
-    }
-
-    /**
-     * Adjust visibilities for reveal.
-     *
-     * @param target view.
-     * @param behind view.
-     * @param reveal reveal state.
-     */
-    private static void adjustVisibility(View target, View behind, boolean reveal) {
-        if (reveal) {
-            target.setVisibility(View.VISIBLE);
-            behind.setVisibility(View.GONE);
-        } else {
-            target.setVisibility(View.GONE);
-            behind.setVisibility(View.VISIBLE);
-        }
     }
 
 }

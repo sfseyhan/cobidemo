@@ -21,12 +21,19 @@ public class RotatingLayout extends RelativeLayout {
     private int angleBetweenChildren;
     private boolean isRotating;
 
-    private AnimationUtil.OnRotationCompletedListener onAnimationCompletedListener
-            = new AnimationUtil.OnRotationCompletedListener() {
-                @Override
-                public void onRotationCompeted() {
-                    isRotating = false;
-                }
+    private AnimationUtil.OnAnimationCompletedListener onAnimationCompletedListener
+            = new AnimationUtil.OnAnimationCompletedListener() {
+
+        @Override
+        public void onRotationCompeted() {
+            isRotating = false;
+        }
+
+        @Override
+        public void onTranslationCompeted() {
+
+        }
+
     };
 
     public RotatingLayout(Context context) {
