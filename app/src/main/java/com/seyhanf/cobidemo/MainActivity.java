@@ -35,15 +35,6 @@ public class MainActivity extends AppCompatActivity {
         setPentagonSpecs(layoutPentagonLeft, false);
     }
 
-    @OnClick(R.id.activity_main_pentagon_right)
-    public void rotateRightPentagon() {
-
-        layoutPentagonRight.showNextChild(false);
-//        AnimationUtil.rotate(
-//                this,
-//                getChildren(layoutPentagonRight));
-    }
-
     @OnClick(R.id.activity_main_pentagon_left)
     public void movePentagon() {
 

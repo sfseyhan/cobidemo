@@ -3,6 +3,7 @@ package com.seyhanf.cobidemo;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -65,7 +66,6 @@ public class RotatingLayout extends FrameLayout {
             }
         });
 
-
     }
 
     private void init() {
@@ -117,6 +117,31 @@ public class RotatingLayout extends FrameLayout {
         view.setPivotX(pivotX);
         view.setPivotY(pivotY);
 
+    }
+
+    float touched_x, touched_y;
+    boolean touched = false;
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        touched_x = event.getX();
+        touched_y = event.getY();
+
+        int action = event.getAction();
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                touched = true;
+                break;
+            case MotionEvent.ACTION_MOVE:
+                touched = true;
+                break;
+            default:
+                touched = false;
+                break;
+        }
+        if (touched) {
+            showNextChild(false);
+        }
+        return true; // processed
     }
 
     public boolean showNextChild(boolean rotateClockwise) {
