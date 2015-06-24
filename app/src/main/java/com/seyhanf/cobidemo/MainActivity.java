@@ -5,15 +5,10 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -22,18 +17,11 @@ import butterknife.OnClick;
 /**
  * Created by seyhanf on 23/06/15.
  */
-public class MainActivity extends AppCompatActivity implements AnimationUtil.OnAnimationCompletedListener {
+public class MainActivity extends AppCompatActivity {
 
-    @InjectView(R.id.activity_main_pentagon_right) FrameLayout layoutPentagonRight;
+    @InjectView(R.id.activity_main_pentagon_right) RotatingLayout layoutPentagonRight;
     @InjectView(R.id.activity_main_pentagon_left) FrameLayout layoutPentagonLeft;
-    @InjectView(R.id.activity_main_rotating_pentagon) View viewPentagon;
-    @InjectView(R.id.activity_main_rotating_content_first) LinearLayout layoutFirst;
-    @InjectView(R.id.activity_main_rotating_content_second) LinearLayout layoutSecond;
-    @InjectView(R.id.activity_main_rotating_content_third) LinearLayout layoutThird;
-    @InjectView(R.id.activity_main_rotating_content_fourth) LinearLayout layoutFourth;
-    @InjectView(R.id.activity_main_rotating_content_fifth) LinearLayout layoutFifth;
 
-    private boolean isRotating;
     private boolean isTranslating;
     private boolean viewsExitedScreen;
 
@@ -45,51 +33,15 @@ public class MainActivity extends AppCompatActivity implements AnimationUtil.OnA
 
         setPentagonSpecs(layoutPentagonRight, true);
         setPentagonSpecs(layoutPentagonLeft, false);
-
-        layoutPentagonRight.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-
-            @Override
-            public void onGlobalLayout() {
-                layoutPentagonRight.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                prepareRotatingPentagon();
-            }
-        });
-    }
-
-    private void prepareRotatingPentagon() {
-
-        AnimationUtil.setPivotOfPentagon(viewPentagon);
-
-        for (int i = 0; i < layoutPentagonRight.getChildCount(); i++) {
-            View childView = layoutPentagonRight.getChildAt(i);
-            TextView textView = (TextView) childView.findViewById(R.id.layout_pentagon_content_text);
-            if (textView != null) {
-                textView.setText(""+ i);
-            }
-            AnimationUtil.setPivotRelatively(childView, viewPentagon);
-        }
-
-        AnimationUtil.setRotationIncrementally(
-                layoutFirst,
-                layoutSecond,
-                layoutThird,
-                layoutFourth,
-                layoutFifth);
-
     }
 
     @OnClick(R.id.activity_main_pentagon_right)
     public void rotateRightPentagon() {
 
-        if (isRotating) {
-            return;
-        }
-
-        isRotating = true;
-
-        AnimationUtil.rotate(
-                this,
-                getChildren(layoutPentagonRight));
+        layoutPentagonRight.showNextChild(false);
+//        AnimationUtil.rotate(
+//                this,
+//                getChildren(layoutPentagonRight));
     }
 
     @OnClick(R.id.activity_main_pentagon_left)
@@ -115,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements AnimationUtil.OnA
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                onTranslationCompeted();
+                isTranslating = false;
             }
 
             @Override
@@ -128,17 +80,6 @@ public class MainActivity extends AppCompatActivity implements AnimationUtil.OnA
 
         viewsExitedScreen = !viewsExitedScreen;
 
-    }
-
-
-    @Override
-    public void onRotationCompeted() {
-        isRotating = false;
-    }
-
-    @Override
-    public void onTranslationCompeted() {
-        isTranslating = false;
     }
 
     private void setPentagonSpecs(FrameLayout frameLayout, boolean expandToRight) {
@@ -179,14 +120,6 @@ public class MainActivity extends AppCompatActivity implements AnimationUtil.OnA
         display.getSize(size);
         return size.y;
 
-    }
-
-    private View[] getChildren(ViewGroup viewGroup) {
-        final View[] views = new View[viewGroup.getChildCount()];
-        for (int i = 0; i < viewGroup.getChildCount(); i++) {
-            views[i] = viewGroup.getChildAt(i);
-        }
-        return views;
     }
 
 }

@@ -6,13 +6,13 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 /**
  * Created by seyhanf on 23/06/15.
  */
-//TODO Fix issue when multiple children added(Children are not rotated to their initial position).
-public class RotatingLayout extends RelativeLayout {
+public class RotatingLayout extends FrameLayout {
 
     private static final float ALPHA_TRANSPARENT = 0.0f;
     private static final float TOTAL_ANGLE = 360.0f;
@@ -27,11 +27,6 @@ public class RotatingLayout extends RelativeLayout {
         @Override
         public void onRotationCompeted() {
             isRotating = false;
-        }
-
-        @Override
-        public void onTranslationCompeted() {
-
         }
 
     };
@@ -66,14 +61,16 @@ public class RotatingLayout extends RelativeLayout {
             @Override
             public void onGlobalLayout() {
                 getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                addRotatingBackground();
+                init();
             }
         });
+
 
     }
 
     private void init() {
 
+        addRotatingBackground();
         setPivotOfPentagon();
         rotateChildrenToInitialPosition();
 
@@ -89,43 +86,37 @@ public class RotatingLayout extends RelativeLayout {
         rotatingBackground.setBackground(getResources().getDrawable(R.drawable.ic_pentagon));
         addView(rotatingBackground, 0);
 
-        rotatingBackground.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                init();
-            }
-        });
     }
 
     private void setPivotOfPentagon() {
-        rotatingBackground.setPivotX(calculatePentagonPivotX());
-        rotatingBackground.setPivotY(calculatePentagonPivotY());
+        setPivotX(calculatePentagonPivotX());
+        setPivotY(calculatePentagonPivotY());
     }
 
     private float calculatePentagonPivotX() {
-        return rotatingBackground.getWidth()/2;
+        return getWidth()/2;
     }
 
     private float calculatePentagonPivotY() {
-        return rotatingBackground.getHeight()/1.81f;
-    }
-
-    private void setChildPivot(View view) {
-
-        float pivotX = calculatePentagonPivotX() + getX() - view.getX();
-        float pivotY = calculatePentagonPivotY() + getY() - view.getY();
-        view.setPivotX(pivotX);
-        view.setPivotY(pivotY);
-
+        return getHeight()/1.81f;
     }
 
     private void rotateChildrenToInitialPosition() {
+
         for (int i = 0; i < getChildCount(); i++) {
             View childView = getChildAt(i);
             setChildPivot(childView);
             childView.setRotation(angleBetweenChildren * i);
         }
+    }
+
+    private void setChildPivot(View view) {
+
+        float pivotX = calculatePentagonPivotX() - view.getX();
+        float pivotY = calculatePentagonPivotY() - view.getY();
+        view.setPivotX(pivotX);
+        view.setPivotY(pivotY);
+
     }
 
     public boolean showNextChild(boolean rotateClockwise) {
@@ -155,7 +146,11 @@ public class RotatingLayout extends RelativeLayout {
 
     private void animateRotatingViewAlpha(View view, float rotationAngle) {
 
-        float initialRotation = getRotation() + view.getRotation();
+        if (view == rotatingBackground) {
+            return;
+        }
+
+        float initialRotation = view.getRotation();
 
         if (initialRotation % TOTAL_ANGLE == 0) {
             AnimationUtil.animateAlpha(view, false);

@@ -5,12 +5,34 @@
                 android:background="@android:color/black"
                 tools:context=".MainActivity">
 
-    <include
+    <com.seyhanf.cobidemo.RotatingLayout
         android:id="@+id/activity_main_pentagon_right"
-        layout="@layout/layout_rotating_pentagon"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:layout_gravity="right|center_vertical"/>
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|center_vertical">
+
+        <include
+            android:id="@+id/activity_main_rotating_content_first"
+            layout="@layout/layout_pentagon_content" />
+
+        <include
+            android:id="@+id/activity_main_rotating_content_second"
+            layout="@layout/layout_pentagon_content" />
+
+        <include
+            android:id="@+id/activity_main_rotating_content_third"
+            layout="@layout/layout_pentagon_content" />
+
+        <include
+            android:id="@+id/activity_main_rotating_content_fourth"
+            layout="@layout/layout_pentagon_content" />
+
+        <include
+            android:id="@+id/activity_main_rotating_content_fifth"
+            layout="@layout/layout_pentagon_content" />
+
+    </com.seyhanf.cobidemo.RotatingLayout>
+
     <include
         android:id="@+id/activity_main_pentagon_left"
         layout="@layout/layout_left_pentagon"
